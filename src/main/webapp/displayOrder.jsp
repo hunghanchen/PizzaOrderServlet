@@ -1,7 +1,7 @@
 <%-- 
     Document   : displayOrder
     Created on : 17-Sep-2019, 3:04:01 PM
-    Author     : Nancy Chen
+    Author     : Hung-Han,Chen, Ali Cemilcan Ciftarslan
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -33,7 +33,6 @@
         <% } else { %>
         <h2> <% out.print(pickOrDelievery);%> </h2>
         <% }%>
-
         <h3><% out.print(pizzaOrder.getSize());%> pizza with</h3>
 
 

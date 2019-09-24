@@ -23,12 +23,12 @@ public class PlaceOrder extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
 
             PizzaOrder pizzaOrder = new PizzaOrder();
-            String pizzaSize = request.getParameter("pizzaSize");
             // Referer is for back previous page 
             String referer = request.getHeader("Referer");
 
             //If customers didn't chose pizza size it will create another page
             //to remind customers and back to StartOrder page to refill again
+            String pizzaSize = request.getParameter("pizzaSize");
             if (request.getParameter("pizzaSize") == null) {
                 writeHeader(out);
                 out.println("<h1> Please choose the pizza size</h1>");
@@ -61,7 +61,7 @@ public class PlaceOrder extends HttpServlet {
                 request.setAttribute("toppingName", topping);
 
                 pizzaOrder.setSize(pizzaSize);
-                
+
                 pizzaOrder.setDelivery(isDelieveryOrNot);
 
                 request.setAttribute("pizzaOrder", pizzaOrder);

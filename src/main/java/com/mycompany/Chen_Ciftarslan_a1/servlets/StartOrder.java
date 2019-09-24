@@ -11,7 +11,7 @@ import javax.servlet.http.HttpSession;
 
 /**
  *
- * @author Nancy Chen
+ * @author Hung-Han,Chen
  */
 public class StartOrder extends HttpServlet {
 
@@ -36,9 +36,13 @@ public class StartOrder extends HttpServlet {
 
             //check name and phone is correct or not, phone number should be 10 digital
             //and should be enter name, dectect only type space as well
-            if (customerName == null || customerName.trim().length() == 0
-                    || customerPhone == null || customerPhone.trim().length() == 0 || builder.length() != 10) {
+            if ((customerName == null || customerName.trim().length() == 0)
+                    && (customerPhone == null || customerPhone.trim().length() == 0 || builder.length() != 10)) {
                 out.println("<h1>Please enter correctly name and phone(Phone should be 10 digital number) </h1>");
+            } else if (customerName == null || customerName.trim().length() == 0) {
+                out.println("<h1>Please enter correctly name </h1>");
+            } else if (customerPhone == null || customerPhone.trim().length() == 0 || builder.length() != 10) {
+                out.println("<h1>Please enter correctly phone(Phone should be 10 digital number) </h1>");
             } else {
 
                 //fomating output number is XXX XXX-XXX

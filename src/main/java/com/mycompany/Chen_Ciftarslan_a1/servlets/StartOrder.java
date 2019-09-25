@@ -2,6 +2,8 @@ package com.mycompany.Chen_Ciftarslan_a1.servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -10,8 +12,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
- *
- * @author Hung-Han,Chen
+ *In this program we are creating a basic Java Servlet Application 
+ * to order a pizza.
+ * @authors Hung-Han,Chen AliCemilcan
+ * Date:24.09.2019
  */
 public class StartOrder extends HttpServlet {
 
@@ -33,7 +37,12 @@ public class StartOrder extends HttpServlet {
                     builder.append(ch);
                 }
             }
-
+            // Define a regex for the Canada Phone numbers
+            String RegexforCanada = "([6]{1}[4]{1}[7]{1}[0-9]{7})";
+            Pattern pattern = Pattern.compile(RegexforCanada);
+            //Create a matcher for phone number
+            Matcher matcher = pattern.matcher(builder.toString());
+            
             //check name and phone is correct or not, phone number should be 10 digital
             //and should be enter name, dectect only type space as well
             if ((customerName == null || customerName.trim().length() == 0)
@@ -41,33 +50,37 @@ public class StartOrder extends HttpServlet {
                 out.println("<h1>Please enter correctly name and phone(Phone should be 10 digital number) </h1>");
             } else if (customerName == null || customerName.trim().length() == 0) {
                 out.println("<h1>Please enter correctly name </h1>");
-            } else if (customerPhone == null || customerPhone.trim().length() == 0 || builder.length() != 10) {
-                out.println("<h1>Please enter correctly phone(Phone should be 10 digital number) </h1>");
+            } else if (!matcher.matches()) {                  //customerPhone == null || customerPhone.trim().length() == 0 || builder.length() != 10
+                out.println("<h1>Please enter a valid phone number </h1>");
             } else {
 
                 //fomating output number is XXX XXX-XXX
-                //first I get all digital already
+                //first  get all digital already
                 //then insert space and hyphen to offset 3 and 7 spot
-                builder.insert(3, " ");
-                builder.insert(7, "-");
+//                builder.insert(3, " ");
+//                builder.insert(7, "-");
+                
+                String Phonenumber = builder.toString().replaceFirst("(\\d{3})(\\d{3})(\\d+)", "($1) $2-$3");
+                
 
                 //HttpSession for pass to displayOrder.jsp purpose
                 HttpSession session = request.getSession();
                 session.setAttribute("customerName", customerName);
-                session.setAttribute("customerPhone", builder.toString());
+                session.setAttribute("customerPhone", Phonenumber);
 
                 String format = "<h1>Hi %s </h1> <h2> %s </h2>";
-                out.printf(String.format(format, customerName, builder.toString()));
+                out.printf(String.format(format, customerName, Phonenumber));
 
-                out.println("<form action=\"PlaceOrder.do\" method=\"POST\">");
+                out.println("<form action='PlaceOrder.do' method='POST'>");
                 out.println("Pick up or delivery ");
-                out.println("<select name=\"pickupOrDelievery\">");
-                out.println("<option value=\"pickup\">Pick Up</option>");
-                out.println("<option value=\"delivery\">Delivery</option>");
+                out.println("<select name='pickupOrDelievery'>");
+                out.println("<option value='pickup'>Pick Up</option>");
+                out.println("<option value='delivery'>Delivery</option>");
                 out.println("</select>");
                 out.println("<br><br><br>");
 
                 //create pizza size option(small, medium,and large)
+                //We are using loop, we dont want redundant
                 String[] size = new String[]{"Small", "Medium", "Large"};
                 double price = 5;
                 for (int i = 0; i < size.length; i++) {

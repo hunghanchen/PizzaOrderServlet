@@ -14,6 +14,7 @@
         <title>Order Details</title>
     </head>
     <body>
+        <!--Retrieving the pizza topping,delivery and order information with getAttribute -->
         <% PizzaOrder pizzaOrder = (PizzaOrder) request.getAttribute("pizzaOrder"); %>
         <% String pickOrDelievery = (String) request.getAttribute("pickOrDelievery"); %>
         <% String[] toppingName = (String[]) request.getAttribute("toppingName"); %>

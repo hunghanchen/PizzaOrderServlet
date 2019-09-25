@@ -12,10 +12,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
- *In this program we are creating a basic Java Servlet Application 
- * to order a pizza.
- * @authors Hung-Han,Chen AliCemilcan
- * Date:24.09.2019
+ * In this program we are creating a basic Java Servlet Application to order a
+ * pizza.
+ *
+ * @authors Hung-Han,Chen AliCemilcan Date:24.09.2019
  */
 public class StartOrder extends HttpServlet {
 
@@ -23,7 +23,7 @@ public class StartOrder extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
+        try ( PrintWriter out = response.getWriter()) {
             writeHeader(out);
 
             String customerName = request.getParameter("name");
@@ -37,20 +37,24 @@ public class StartOrder extends HttpServlet {
                     builder.append(ch);
                 }
             }
+            //Define a regex for the name, it should be all character with a max limit of 20 and min 8
+            String RegexforName = "([a-zA-Z]{8,20})";
+            Pattern patternName = Pattern.compile(RegexforName);
             // Define a regex for the Canada Phone numbers
-            String RegexforCanada = "([6]{1}[4]{1}[7]{1}[0-9]{7})";
-            Pattern pattern = Pattern.compile(RegexforCanada);
+            String RegexforPhone = "([6]{1}[4]{1}[7]{1}[0-9]{7})";
+            Pattern pattern = Pattern.compile(RegexforPhone);
             //Create a matcher for phone number
-            Matcher matcher = pattern.matcher(builder.toString());
-            
+            Matcher matcherPhone = pattern.matcher(builder.toString());
+            Matcher matcherName = patternName.matcher(customerName.replaceAll(" ", ""));
             //check name and phone is correct or not, phone number should be 10 digital
             //and should be enter name, dectect only type space as well
-            if ((customerName == null || customerName.trim().length() == 0)
-                    && (customerPhone == null || customerPhone.trim().length() == 0 || builder.length() != 10)) {
-                out.println("<h1>Please enter correctly name and phone(Phone should be 10 digital number) </h1>");
-            } else if (customerName == null || customerName.trim().length() == 0) {
-                out.println("<h1>Please enter correctly name </h1>");
-            } else if (!matcher.matches()) {                  //customerPhone == null || customerPhone.trim().length() == 0 || builder.length() != 10
+//            if ((customerName == null || customerName.trim().length() == 0)
+//                    && (customerPhone == null || customerPhone.trim().length() == 0 || builder.length() != 10)) {
+//                out.println("<h1>Please enter correctly name and phone(Phone should be 10 digital number) </h1>");
+//            } else
+            if (!matcherName.matches()) {
+                out.println("<h1>Please enter a valid name </h1>");
+            } else if (!matcherPhone.matches()) {                  //customerPhone == null || customerPhone.trim().length() == 0 || builder.length() != 10
                 out.println("<h1>Please enter a valid phone number </h1>");
             } else {
 
@@ -59,9 +63,7 @@ public class StartOrder extends HttpServlet {
                 //then insert space and hyphen to offset 3 and 7 spot
 //                builder.insert(3, " ");
 //                builder.insert(7, "-");
-                
                 String Phonenumber = builder.toString().replaceFirst("(\\d{3})(\\d{3})(\\d+)", "($1) $2-$3");
-                
 
                 //HttpSession for pass to displayOrder.jsp purpose
                 HttpSession session = request.getSession();
